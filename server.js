@@ -22,7 +22,7 @@ MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
         app.get('/',(request, response)=>{
             db.collection('rappers').find().toArray()
             .then(data => {
-                response.render('index.ejs', { info: data })
+                response.render('/index.ejs', { info: data })
             })
             .catch(error => console.error(error))
         })
