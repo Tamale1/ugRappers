@@ -19,6 +19,7 @@ MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
         console.log(`Connected to ${dbName} Database`)
         db = client.db(dbName)
 
+       try {
         app.get('/',(request, response)=>{
             db.collection('rappers').find().toArray()
             .then(data => {
@@ -26,16 +27,26 @@ MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
             })
             .catch(error => console.error(error))
         })
+        
+       } catch (error) {
+        console.log(error);
+       }
 
-        app.post('/addRapper', (request, response) => {
-            db.collection('rappers').insertOne({stageName: request.body.stageName,
-                birthName: request.body.birthName, likes: 0})
-            .then(result => {
-                console.log('Rapper Added')
-                response.redirect('/')
+        try {
+            app.post('/addRapper', (request, response) => {
+                db.collection('rappers').insertOne({stageName: request.body.stageName,
+                    birthName: request.body.birthName, likes: 0})
+                .then(result => {
+                    console.log('Rapper Added')
+                    response.redirect('/')
+                })
+                .catch(error => console.error(error))
             })
-            .catch(error => console.error(error))
-        })
+            
+        } catch (error) {
+            console.log(error);
+        }
+       try {
         app.put('/addOneLike', (request, response) => {
             db.collection('rappers').updateOne({stageName: request.body.stageNameS, birthName: request.body.birthNameS,likes: request.body.likesS},{
                 $set: {
@@ -52,7 +63,12 @@ MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
             .catch(error => console.error(error))
         
         })
+        
+       } catch (error) {
+        
+       }
 
+       try {
         app.delete('/deleteRapper', (request, response) => {
             db.collection('rappers').deleteOne({stageName: request.body.stageNameS})
             .then(result => {
@@ -62,6 +78,11 @@ MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
             .catch(error => console.error(error))
         
         })
+       } catch (error) {
+        
+       }
+    }).catch(err =>{
+    console.error(err);
     })
 
     app.listen( PORT, ()=>{
