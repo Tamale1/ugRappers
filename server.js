@@ -19,20 +19,18 @@ MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
         console.log(`Connected to ${dbName} Database`)
         db = client.db(dbName)
 
-       try {
+       
         app.get('/',(request, response)=>{
             db.collection('rappers').find().toArray()
             .then(data => {
-                response.render('/index.ejs', { info: data })
+                response.render('index.ejs', { info: data })
             })
             .catch(error => console.error(error))
         })
         
-       } catch (error) {
-        console.log(error);
-       }
+      
 
-        try {
+        
             app.post('/addRapper', (request, response) => {
                 db.collection('rappers').insertOne({stageName: request.body.stageName,
                     birthName: request.body.birthName, likes: 0})
@@ -43,10 +41,7 @@ MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
                 .catch(error => console.error(error))
             })
             
-        } catch (error) {
-            console.log(error);
-        }
-       try {
+       
         app.put('/addOneLike', (request, response) => {
             db.collection('rappers').updateOne({stageName: request.body.stageNameS, birthName: request.body.birthNameS,likes: request.body.likesS},{
                 $set: {
@@ -64,11 +59,7 @@ MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
         
         })
         
-       } catch (error) {
-        
-       }
-
-       try {
+     
         app.delete('/deleteRapper', (request, response) => {
             db.collection('rappers').deleteOne({stageName: request.body.stageNameS})
             .then(result => {
@@ -78,11 +69,7 @@ MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
             .catch(error => console.error(error))
         
         })
-       } catch (error) {
-        
-       }
-    }).catch(err =>{
-    console.error(err);
+      
     })
 
     app.listen( PORT, ()=>{
